@@ -46,7 +46,7 @@ const HotCollections = () => {
             </div>
           </div>
 
-        <OwlCarousel className='owl-theme' loop margin={10} nav>
+        <OwlCarousel className='owl-theme' loop margin={10} items={4} dots={false} nav>
             {data.map((item, index) => (
                 <div key={index}>
                 <div className="nft_coll">

@@ -42,8 +42,8 @@ const TopSellers = () => {
           </div>
           <div className="col-md-12">
             <ol className="author_list">
-              {/* {new Array(12).fill(0).map((_, index) => ( */}
-                {data.map((item, index) => (
+
+                {isLoading ? data.map((item, index) => (
                 <li key={index}>
                   <div className="author_list_pp">
                     <Link to={`/author/${item.authorId}`}>
@@ -60,7 +60,32 @@ const TopSellers = () => {
                     <span>{item.price} ETH</span>
                   </div>
                 </li>
-              ))}
+              )) : data.map((item, index) => (
+                <li key={index}>
+                  <div className="author_list_pp">
+                  <Skeleton
+                        width="100%"
+                        height="200px"
+                        borderRadius="8px"
+                      />
+                  </div>
+                  <div className="author_list_info">
+                  <Skeleton
+                          width="70%"
+                          height="24px"
+                          borderRadius="4px"
+                        />
+                        <Skeleton
+                          width="40%"
+                          height="18px"
+                          borderRadius="4px"
+                        />
+                  </div>
+                </li> )) }
+
+
+
+
             </ol>
           </div>
         </div>

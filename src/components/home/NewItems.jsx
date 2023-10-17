@@ -1,25 +1,11 @@
 import React, { useEffect, useState , Component } from "react";
 import { Link } from "react-router-dom";
-import AuthorImage from "../../images/author_thumbnail.jpg";
-import nftImage from "../../images/nftImage.jpg";
-
 import CountdownTimer from './CountdownTimer';
 
-// function CountdownTimer({ initialCountdown }) {
-//   const [countdown, setCountdown] = useState(initialCountdown);
+import OwlCarousel from 'react-owl-carousel';
+import 'owl.carousel/dist/assets/owl.carousel.css';
+import 'owl.carousel/dist/assets/owl.theme.default.css';
 
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       setCountdown((prevCountdown) => prevCountdown - 1);
-//     }, 1000);
-
-//     return () => {
-//       clearInterval(interval);
-//     };
-//   }, []);
-
-//   return {countdown};
-// }
 
 const NewItems = () => {
 
@@ -47,17 +33,25 @@ const NewItems = () => {
       });
   }, []);
 
-  // this work no countdown
-  // const convertTimestampToTime = (timestamp) => {
-  //   const date = new Date(timestamp);
-  //   const hours = date.getHours();
-  //   const minutes = date.getMinutes();
-  //   const seconds = date.getSeconds();
-  //   return `${hours}:${minutes}:${seconds}`;
-  // };
+  const options = {
+    loop: true ,
+    margin: 10, 
+    items: 4 ,
+    dots: false, 
+    nav: true,
+    responsive: {
+      0: {
+        items: 1,
+      },
+      600: {
+        items: 2,
+      },
+      700: {
+        items: 4,
+      },
+    },
+  }
 
-
-  
 
   return (
     <section id="section-items" className="no-bottom">
@@ -69,9 +63,10 @@ const NewItems = () => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
-          {/* {new Array(4).fill(0).map((_, index) => ( */}
+          
+          <OwlCarousel className='owl-theme' {...options}>
           {data.map((item, index) => (
-          <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={index}>
+          <div  key={index}>
               <div className="nft__item">
                 <div className="author_list_pp">
                   <Link
@@ -128,6 +123,7 @@ const NewItems = () => {
               </div>
             </div>
           ))}
+          </OwlCarousel>
         </div>
       </div>
     </section>

@@ -32,7 +32,24 @@ const HotCollections = () => {
       });
   }, []);
 
-
+  const options = {
+    loop: true ,
+    margin: 10, 
+    items: 4 ,
+    dots: false, 
+    nav: true,
+    responsive: {
+      0: {
+        items: 1,
+      },
+      600: {
+        items: 2,
+      },
+      700: {
+        items: 4,
+      },
+    },
+  }
 
 
   return (
@@ -46,7 +63,7 @@ const HotCollections = () => {
             </div>
           </div>
 
-        <OwlCarousel className='owl-theme' loop margin={10} items={4} dots={false} nav>
+        <OwlCarousel className='owl-theme' {...options}>
             {data.map((item, index) => (
                 <div key={index}>
                 <div className="nft_coll">

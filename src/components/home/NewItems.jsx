@@ -1,6 +1,7 @@
 import React, { useEffect, useState , Component } from "react";
 import { Link } from "react-router-dom";
 import CountdownTimer from './CountdownTimer';
+import Skeleton from "../UI/Skeleton";
 
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
@@ -10,10 +11,11 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 const NewItems = () => {
 
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState([]);
+  const [isLoading, setIsLoading] = useState([false]);
 
   useEffect(() => {
     // Fetch data from the URL
+    setIsLoading(true);
     fetch('https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems')
       .then((response) => {
         if (!response.ok) {
@@ -26,7 +28,7 @@ const NewItems = () => {
       .then((data) => {
         // Assuming the response is an array, you can set it to the state
         setData(data);
-        setLoading(false);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
@@ -65,7 +67,7 @@ const NewItems = () => {
           </div>
           
           <OwlCarousel className='owl-theme' {...options}>
-          {data.map((item, index) => (
+          {isLoading ? data.map((item, index) => (
           <div  key={index}>
               <div className="nft__item">
                 <div className="author_list_pp">
@@ -80,8 +82,7 @@ const NewItems = () => {
                     <i className="fa fa-check"></i>
                   </Link>
                 </div>
-                
-                {/* <div className="de_countdown">{  }</div> */}
+              
                 <CountdownTimer initialCountdown={item.expiryDate} />
 
                 <div className="nft__item_wrap">
@@ -123,7 +124,49 @@ const NewItems = () => {
                 </div>
               </div>
             </div>
-          ))}
+          ))
+        
+            : data.map((item, index) => (
+              <div  key={index}>
+                  <div className="nft__item">
+                    <div className="author_list_pp">
+
+                    </div>
+                  
+                    <CountdownTimer initialCountdown={item.expiryDate} />
+    
+                    <div className="nft__item_wrap">
+                      <div className="nft__item_extra">
+                      <Skeleton
+                        width="100%"
+                        height="200px"
+                        borderRadius="8px"
+                      />
+                      </div>
+    
+                      <Link to={`/item-details/${item.nftId}`}>
+                        <img
+                          src={item.nftImage}
+                          className="lazy nft__item_preview"
+                          alt=""
+                        />
+                      </Link>
+                    </div>
+                    <div className="nft__item_info">
+                    <Skeleton
+                          width="70%"
+                          height="24px"
+                          borderRadius="4px"
+                        />
+                        <Skeleton
+                          width="40%"
+                          height="18px"
+                          borderRadius="4px"
+                        />
+                    </div>
+                  </div>
+                </div>
+              ))}
           </OwlCarousel>
         </div>
       </div>

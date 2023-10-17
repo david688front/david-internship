@@ -1,8 +1,34 @@
-import React from "react";
+import React, { useEffect, useState , Component } from "react";
 import { Link } from "react-router-dom";
 import AuthorImage from "../../images/author_thumbnail.jpg";
 
 const TopSellers = () => {
+
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from the URL
+    fetch('https://us-central1-nft-cloud-functions.cloudfunctions.net/topSellers')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+    //     setLoaded(true);
+    //console.log(data);
+        return response.json();
+      })
+      .then((data) => {
+        // Assuming the response is an array, you can set it to the state
+        setData(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+
   return (
     <section id="section-popular" className="pb-5">
       <div className="container">
@@ -15,21 +41,22 @@ const TopSellers = () => {
           </div>
           <div className="col-md-12">
             <ol className="author_list">
-              {new Array(12).fill(0).map((_, index) => (
+              {/* {new Array(12).fill(0).map((_, index) => ( */}
+                {data.map((item, index) => (
                 <li key={index}>
                   <div className="author_list_pp">
-                    <Link to="/author">
+                    <Link to={`/author/${item.authorId}`}>
                       <img
                         className="lazy pp-author"
-                        src={AuthorImage}
+                        src={item.authorImage}
                         alt=""
                       />
                       <i className="fa fa-check"></i>
                     </Link>
                   </div>
                   <div className="author_list_info">
-                    <Link to="/author">Monica Lucas</Link>
-                    <span>2.1 ETH</span>
+                    <Link to={`/author/${item.authorId}`}>{item.authorName}</Link>
+                    <span>{item.price} ETH</span>
                   </div>
                 </li>
               ))}

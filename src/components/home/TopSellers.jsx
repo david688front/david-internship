@@ -1,14 +1,15 @@
 import React, { useEffect, useState , Component } from "react";
 import { Link } from "react-router-dom";
-import AuthorImage from "../../images/author_thumbnail.jpg";
+import Skeleton from "../UI/Skeleton";
 
 const TopSellers = () => {
 
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState([]);
+  const [isLoading, setIsLoading] = useState([false]);
 
   useEffect(() => {
     // Fetch data from the URL
+    setIsLoading(true);
     fetch('https://us-central1-nft-cloud-functions.cloudfunctions.net/topSellers')
       .then((response) => {
         if (!response.ok) {
@@ -21,7 +22,7 @@ const TopSellers = () => {
       .then((data) => {
         // Assuming the response is an array, you can set it to the state
         setData(data);
-        setLoading(false);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);

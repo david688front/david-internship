@@ -1,34 +1,24 @@
-import React, { useEffect, useState , Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Skeleton from "../UI/Skeleton";
+import axios from "axios";
 
 const TopSellers = () => {
 
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState([false]);
+  const [topSellers, setTopSellers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function fetchTopSellers() {
+    const { data } = await axios.get(
+      "https://us-central1-nft-cloud-functions.cloudfunctions.net/topSellers"
+    );
+    setTopSellers(data);
+    setIsLoading(true);
+  }
 
   useEffect(() => {
-    // Fetch data from the URL
-    setIsLoading(true);
-    fetch('https://us-central1-nft-cloud-functions.cloudfunctions.net/topSellers')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-    //     setLoaded(true);
-    //console.log(data);
-        return response.json();
-      })
-      .then((data) => {
-        // Assuming the response is an array, you can set it to the state
-        setData(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+    fetchTopSellers();
   }, []);
-
 
   return (
     <section id="section-popular" className="pb-5">
@@ -43,8 +33,9 @@ const TopSellers = () => {
           <div className="col-md-12">
             <ol className="author_list">
 
-                {isLoading ? data.map((item, index) => (
-                <li key={index}>
+              {isLoading ? topSellers.map((item, index) => (
+
+                <li key={item.id}>
                   <div className="author_list_pp">
                     <Link to={`/author/${item.authorId}`}>
                       <img
@@ -60,31 +51,36 @@ const TopSellers = () => {
                     <span>{item.price} ETH</span>
                   </div>
                 </li>
-              )) : data.map((item, index) => (
+
+              )): new Array(12).fill(0).map((_, index) => (
+                
                 <li key={index}>
                   <div className="author_list_pp">
-                  <Skeleton
-                        width="100%"
-                        height="200px"
-                        borderRadius="8px"
-                      />
+                    <a href="/">
+                      <div
+                        className="skeleton-box"
+                        style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+                      ></div>
+                      <i className="fa fa-check"></i>
+                    </a>
                   </div>
                   <div className="author_list_info">
-                  <Skeleton
-                          width="70%"
-                          height="24px"
-                          borderRadius="4px"
-                        />
-                        <Skeleton
-                          width="40%"
-                          height="18px"
-                          borderRadius="4px"
-                        />
+                    <a href="/">
+                      <div
+                        className="skeleton-box"
+                        style={{ width: "100px", height: "20px" }}
+                      ></div>
+                    </a>
+                    <span>
+                      <div
+                        className="skeleton-box"
+                        style={{ width: "40px", height: "20px" }}
+                      ></div>
+                    </span>
                   </div>
-                </li> )) }
-
-
-
+                </li>
+        
+              ))}
 
             </ol>
           </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState , Component } from "react";
 import { Link } from "react-router-dom";
 import CountdownTimer from './CountdownTimer';
 import Skeleton from "../UI/Skeleton";
+import axios from "axios";
 
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
@@ -10,30 +11,46 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 
 const NewItems = () => {
 
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState([false]);
+  // const [data, setData] = useState([]);
+  // const [isLoading, setIsLoading] = useState([false]);
+
+  // useEffect(() => {
+  //   // Fetch data from the URL
+  //   setIsLoading(true);
+  //   fetch('https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems')
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //       }
+  //   //     setLoaded(true);
+  //   //console.log(data);
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       // Assuming the response is an array, you can set it to the state
+  //       setData(data);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error fetching data:', error);
+  //     });
+  // }, []);
+
+  const [NewItems, setNewItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  async function fetchNewItems() {
+    const { data } = await axios.get(
+      "https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems"
+    );
+    setNewItems(data);
+    setIsLoading(false);
+  }
 
   useEffect(() => {
-    // Fetch data from the URL
-    setIsLoading(true);
-    fetch('https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-    //     setLoaded(true);
-    //console.log(data);
-        return response.json();
-      })
-      .then((data) => {
-        // Assuming the response is an array, you can set it to the state
-        setData(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+    fetchNewItems();
   }, []);
+
 
   const options = {
     loop: true ,
@@ -67,8 +84,8 @@ const NewItems = () => {
           </div>
           
           <OwlCarousel className='owl-theme' {...options}>
-          {isLoading ? data.map((item, index) => (
-          <div  key={index}>
+          {isLoading ? NewItems.map((item, index) => (
+          <div  key={item.id}>
               <div className="nft__item">
                 <div className="author_list_pp">
                
@@ -126,14 +143,14 @@ const NewItems = () => {
             </div>
           ))
         
-            : data.map((item, index) => (
+            : new Array(4).fill(0).map((_, index) => (
               <div  key={index}>
                   <div className="nft__item">
                     <div className="author_list_pp">
 
                     </div>
                   
-                    <CountdownTimer initialCountdown={item.expiryDate} />
+                    {/* <CountdownTimer initialCountdown={item.expiryDate} /> */}
     
                     <div className="nft__item_wrap">
                       <div className="nft__item_extra">
@@ -144,13 +161,6 @@ const NewItems = () => {
                       />
                       </div>
     
-                      <Link to={`/item-details/${item.nftId}`}>
-                        <img
-                          src={item.nftImage}
-                          className="lazy nft__item_preview"
-                          alt=""
-                        />
-                      </Link>
                     </div>
                     <div className="nft__item_info">
                     <Skeleton

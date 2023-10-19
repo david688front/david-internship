@@ -1,80 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import Skeleton from "../UI/Skeleton";
-import CountdownTimer from '../home/CountdownTimer';
 
 const ExploreItems = () => {
-
   const [ExploreItems, setExploreItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [itemsToShow, setItemsToShow] = useState(8);
+  const [selectedFilter, setSelectedFilter] = useState("");
+  const [itemsToShow, setItemsToShow] = useState(6);
 
-  async function fetchExploreItems() {
-    setIsLoading(true);
+  async function fetchExploreItems(filter, count) {
     const { data } = await axios.get(
-      `https://us-central1-nft-cloud-functions.cloudfunctions.net/explore`
+      `https://us-central1-nft-cloud-functions.cloudfunctions.net/explore?filter=${filter}&count=${count}`
     );
     setExploreItems(data);
-    setIsLoading(false);
-  }
-
-
-  async function fetchExploreItemsFilter(filter) {
     setIsLoading(true);
-    const { data } = await axios.get(
-      `https://us-central1-nft-cloud-functions.cloudfunctions.net/explore?filter=${filter}`
-    );
-    setExploreItems(data);
-    setIsLoading(false);
   }
 
   useEffect(() => {
-    fetchExploreItems();
+    // Fetch the first 6 items with the default filter ("")
+    fetchExploreItems("", 6);
   }, []);
 
-//   const handleFilterChange = (event) => {
-//     const selectedValue = event.target.value;
-//     setSelectedFilter(selectedValue);
-//     fetchExploreItems(selectedValue, itemsToShow);
-//   };
+  const handleFilterChange = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedFilter(selectedValue);
+    fetchExploreItems(selectedValue, itemsToShow);
+  };
 
-//   const handleLoadMore = () => {
-//     // Increase the number of items to show by 8
-//     setItemsToShow(itemsToShow + 8);
-//     fetchExploreItems(selectedFilter, itemsToShow + 8);
-//   };
+  const handleLoadMore = () => {
+    // Increase the number of items to show by 6
+    setItemsToShow(itemsToShow + 6);
+    fetchExploreItems(selectedFilter, itemsToShow + 6);
+  };
 
   return (
     <>
       <div>
-        <select id="filter-items" onChange={(e) => fetchExploreItemsFilter(e.target.value)}>
+        <select id="filter-items" value={selectedFilter} onChange={handleFilterChange}>
           <option value="">Default</option>
           <option value="price_low_to_high">Price, Low to High</option>
           <option value="price_high_to_low">Price, High to Low</option>
           <option value="likes_high_to_low">Most liked</option>
         </select>
       </div>
-
-      {isLoading ? (
-
-        <>
-          {new Array(itemsToShow).fill(0).map((_, index) => (
-            <div
-              key={index}
-              className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12"
-              style={{ display: "block", backgroundSize: "cover" }}
-            >
-              <Skeleton width="100%" height="400px" />
-            </div>
-          ))}
-        </>
-
-      ) : (
-        <>
-        {ExploreItems.slice(0, itemsToShow).map((item, index) => (
-      //{ExploreItems.slice(0, itemsToShow).map((item, index) => (
-            
+      {ExploreItems.slice(0, itemsToShow).map((item, index) => (
         <div
           key={index.id}
           className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12"
@@ -91,8 +60,7 @@ const ExploreItems = () => {
                 <i className="fa fa-check"></i>
               </Link>
             </div>
-            {/* <div className="de_countdown">{item.expiryDate}</div> */}
-            <CountdownTimer initialCountdown={item.expiryDate} />
+            <div className="de_countdown">{item.expiryDate}</div>
 
             <div className="nft__item_wrap">
               <div className="nft__item_extra">
@@ -128,21 +96,12 @@ const ExploreItems = () => {
             </div>
           </div>
         </div>
-
-        ))}
-        </>
-        )}
-       
-       {itemsToShow < 16 ? (
-      
-        <div className="col-md-12 text-center">
-            <button id="loadmore" className="btn-main lead" onClick={() => setItemsToShow(itemsToShow + 4)}>
-            Load more
-            </button>
-        </div>
-      ) : (
-            <></>
-      )}
+      ))}
+      <div className="col-md-12 text-center">
+        <button id="loadmore" className="btn-main lead" onClick={handleLoadMore}>
+          Load more
+        </button>
+      </div>
     </>
   );
 };

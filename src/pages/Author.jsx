@@ -1,10 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AuthorBanner from "../images/author_banner.jpg";
 import AuthorItems from "../components/author/AuthorItems";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import AuthorImage from "../images/author_thumbnail.jpg";
+import axios from "axios";
+import Skeleton from "../components/UI/Skeleton";
 
 const Author = () => {
+
+  //   // https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=73855012
+
+  const { authorId } = useParams();
+  const [nfts, setNfts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  //const [itemsToShow, setItemsToShow] = useState(8);
+  //const [nfts, setNfts] = useState([]);
+  //const [follow, setFollow] = useState(false);
+  //const [loading, setLoading] = useState();
+
+
+  async function fetchAuthor() {
+
+    setIsLoading(true);
+    const { data } = await axios.get(
+      `https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${authorId}`
+    );
+    console.log(data);
+    setNfts(data);
+    setIsLoading(false);
+    
+  }
+
+  useEffect(() => {
+    //window.scrollTo(0, 0)
+    fetchAuthor();
+  }, []);
+
+
+
+
   return (
     <div id="wrapper">
       <div className="no-bottom no-top" id="content">
@@ -30,10 +65,10 @@ const Author = () => {
                       <i className="fa fa-check"></i>
                       <div className="profile_name">
                         <h4>
-                          Monica Lucas
-                          <span className="profile_username">@monicaaaa</span>
+                         {nfts.authorName}
+                          <span className="profile_username">@{nfts.tag}</span>
                           <span id="wallet" className="profile_wallet">
-                            UDHUHWudhwd78wdt7edb32uidbwyuidhg7wUHIFUHWewiqdj87dy7
+                          {nfts.address}
                           </span>
                           <button id="btn_copy" title="Copy Text">
                             Copy
@@ -44,7 +79,7 @@ const Author = () => {
                   </div>
                   <div className="profile_follow de-flex">
                     <div className="de-flex-col">
-                      <div className="profile_follower">573 followers</div>
+                      <div className="profile_follower">{nfts.followers} followers</div>
                       <Link to="#" className="btn-main">
                         Follow
                       </Link>
@@ -55,7 +90,7 @@ const Author = () => {
 
               <div className="col-md-12">
                 <div className="de_tab tab_simple">
-                  <AuthorItems />
+                  <AuthorItems nfts={nfts}/>
                 </div>
               </div>
             </div>

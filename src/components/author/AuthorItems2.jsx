@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Skeleton from "../UI/Skeleton";
 
 const AuthorItems = ({ nfts }) => {
   const skeletonLoading = new Array(8).fill(0).map((_, index) => (
@@ -10,17 +9,33 @@ const AuthorItems = ({ nfts }) => {
     style={{ display: "block", backgroundSize: "cover"}}
   >
     <div className="author_list_pp">
-    <Skeleton width="100%" height="50px" />
+      <div
+        className="lazy skeleton-box"
+        style={{
+          width: 50,
+          height: 50,
+          borderRadius: 999,
+          borderWidth: 5,
+          borderStyle: "solid",
+          borderColor: "white",
+        }}
+      ></div>
       <i className="fa fa-check"></i>
     </div>
 
     <div className="nft__item_wrap">
-    <Skeleton width="100%" height="200px" />
+      <div
+        className=" lazy nft__item_preview skeleton-box"
+        style={{ width: 280, height: 300, borderRadius: 10 }}
+      ></div>
     </div>
     <div className="nft__item_info">
-      <Skeleton width="100%" height="200px" />
+      <div className="skeleton-box" style={{ width: "100px" }}></div>
     </div>
- 
+    <div
+      className="nft__item_price skeleton-box"
+      style={{ width: "50px" }}
+    ></div>
   </div>
   ));
 

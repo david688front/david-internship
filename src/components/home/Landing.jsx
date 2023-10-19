@@ -2,6 +2,8 @@ import React from "react";
 import NFT from "../../images/nft.png";
 import backgroundImage from "../../images/bg-shape-1.jpg";
 import { Link } from "react-router-dom";
+import AOS from 'aos';
+AOS.init();
 
 const Landing = () => {
   return (
@@ -17,7 +19,7 @@ const Landing = () => {
           <div className="row align-items-center">
             <div className="col-md-6">
               <div className="spacer-single"></div>
-              <h6>
+              <h6 data-aos="fade-in" data-aos-delay="200" data-aos-duration="1000">
                 <span className="text-uppercase id-color-2">
                   Ultraverse Market
                 </span>

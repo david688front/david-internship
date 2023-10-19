@@ -7,6 +7,8 @@ import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 
+import AOS from "aos";
+
 const HotCollections = () => {
 
   const [data, setData] = useState([]);
@@ -28,6 +30,7 @@ const HotCollections = () => {
         // Assuming the response is an array, you can set it to the state
         setData(data);
         setIsLoading(false);
+        AOS.init();
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
@@ -71,7 +74,7 @@ const HotCollections = () => {
                <div key={item.id}>
                <div className="nft_coll">
                <div className="nft_wrap">
-               <Link to={`/item-details/${item.nftId}`}>
+               <Link to={`/item-details/${item.nftId}`} data-aos="fade-in">
                    <img src={item.nftImage} className="lazy img-fluid" alt="" />
                  </Link>
                </div>

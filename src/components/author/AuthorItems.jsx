@@ -3,24 +3,19 @@ import { Link } from "react-router-dom";
 import Skeleton from "../UI/Skeleton";
 
 const AuthorItems = ({ nfts }) => {
-  const skeletonLoading = new Array(8).fill(0).map((_, index) => (
-    <div
-    key={index}
-    className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12 nft__item"
-    style={{ display: "block", backgroundSize: "cover"}}
+  const isLoading = new Array(8).fill(0).map((_, index) => (
+    <div key={index} className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12 nft__item" style={{ display: "block", backgroundSize: "cover"}}
   >
     <div className="author_list_pp">
     <Skeleton width="100%" height="50px" />
       <i className="fa fa-check"></i>
     </div>
-
     <div className="nft__item_wrap">
     <Skeleton width="100%" height="200px" />
     </div>
     <div className="nft__item_info">
       <Skeleton width="100%" height="200px" />
     </div>
- 
   </div>
   ));
 
@@ -28,8 +23,7 @@ const AuthorItems = ({ nfts }) => {
     <div className="de_tab_content">
       <div className="tab-1">
         <div className="row">
-          {!nfts || !nfts.nftCollection
-            ? skeletonLoading
+          {!nfts || !nfts.nftCollection ? isLoading
             : nfts.nftCollection.map((item, index) => (
                 <div
                   className="col-lg-3 col-md-6 col-sm-6 col-xs-12"
